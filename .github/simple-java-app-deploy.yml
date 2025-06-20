@@ -1,0 +1,48 @@
+name: Simple Java App CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Build and run tests
+      run: mvn clean verify
+
+    - name: Sonar Scan
+      uses: kitabisa/sonarqube-action@v1.2.0
+      with:
+       host: ${{ secrets.SONARQUBE_HOST }}
+       Login: ${{ secrets.SONAR_SIMPLE_JAVA_APP_TOKEN }}
+    - name: SET SONAR AUTHENTICATION
+      run: mvn sonar:sonar -X \
+        -Dsonar.projectKey=piomin_sample-java-app-sonar \
+        -Dsonar.organization=piomin \
+        -Dsonar.host.url=$SONARQUBE_HOST \
+        -Dsonar.login=$SONAR_SIMPLE_JAVA_APP_TOKEN \
+        -Dsonar.modules=person-service \
+        -Dsonar.exclusions=sonar-plugins/**
