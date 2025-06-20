@@ -1,4 +1,4 @@
-name: Simple Java App CI new
+name: Simple Java App CI new1
 
 on:
   push:
