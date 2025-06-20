@@ -37,12 +37,12 @@ jobs:
       uses: kitabisa/sonarqube-action@v1.2.0
       with:
        host: ${{ secrets.SONARQUBE_HOST }}
-       Login: ${{ secrets.SONAR_SIMPLE }}
+       Login: ${{ secrets.SONARQUBE_TOKEN }}
     - name: SET SONAR AUTHENTICATION
       run: mvn sonar:sonar -X \
         -Dsonar.projectKey=piomin_sample-java-app-sonar \
         -Dsonar.organization=piomin \
         -Dsonar.host.url=$SONARQUBE_HOST \
-        -Dsonar.login=$SONAR_SIMPLE \
+        -Dsonar.login=$SONARQUBE_TOKEN \
         -Dsonar.modules=person-service \
         -Dsonar.exclusions=sonar-plugins/**
