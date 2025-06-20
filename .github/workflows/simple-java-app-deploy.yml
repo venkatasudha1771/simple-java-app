@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -34,15 +33,11 @@ jobs:
       run: mvn clean verify
 
     - name: Sonar Scan
-      uses: kitabisa/sonarqube-action@v1.2.0
-      with:
-       host: ${{ secrets.SONARQUBE_HOST }}
-       Login: ${{ secrets.SONARQUBE_TOKEN }}
-    - name: SET SONAR AUTHENTICATION
       run: mvn sonar:sonar -X \
         -Dsonar.projectKey=piomin_sample-java-app-sonar \
         -Dsonar.organization=piomin \
-        -Dsonar.host.url=$SONARQUBE_HOST \
-        -Dsonar.login=$SONARQUBE_TOKEN \
+        -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
+        -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }} \
         -Dsonar.modules=person-service \
+        -Dsonar.java.binaries=target/classes \
         -Dsonar.exclusions=sonar-plugins/**
